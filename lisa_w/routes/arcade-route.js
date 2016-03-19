@@ -1,6 +1,8 @@
 'use strict';
 var Arcade = require('../models/Arcade');
 var bodyParser = require('body-parser');
+require('./game-route.js');
+require('../models/Game');
 
 module.exports = function(router){
   router.use(bodyParser.json());
@@ -11,15 +13,15 @@ module.exports = function(router){
      var newArcade = new Arcade(req.body);
      newArcade.save((err, arcade)=>{
        if (err) res.send(err);
-       res.json({data: arcade});
+       res.json(arcade);
      });
 
    })
    .get((req, res) =>{
      console.log('get was hit');
-     Arcade.find({},(err, arcades)=>{
+     Arcade.find({}).populate('games').exec((err, arcades)=>{
        if(err)  res.send(err);
-       res.json(arcades);
+       res.json({data: arcades});
        console.log('hit' + arcades);
      });
    });

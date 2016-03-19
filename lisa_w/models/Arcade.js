@@ -1,19 +1,19 @@
 'use strict';
 
 let mongoose = require('mongoose');
-let Schema = mongoose.Schema;
-let ArcadeSchema = new Schema({
+let arcadeSchema = new mongoose.Schema({
   name: String,
   address: String,
   updated: {type: Date, default: Date.now },
   games: [{
-    type: Schema.Types.ObjectId,
-    ref: 'Game'
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Games'
   }
   ]
 
 });
 
 
-let Arcade = mongoose.model('Arcade', ArcadeSchema);
-module.exports = Arcade;
+
+
+module.exports = mongoose.model('Arcade', arcadeSchema);

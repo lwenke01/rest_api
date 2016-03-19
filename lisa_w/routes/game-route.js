@@ -18,7 +18,7 @@ module.exports = (router) => {
          console.log('get was hit');
          Game.find({},(err, games)=>{
            if(err) res.send(err);
-           res.json(games);
+           res.json({data: games});
          });
        });
 

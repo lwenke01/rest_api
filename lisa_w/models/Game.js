@@ -1,8 +1,7 @@
 'use strict';
 
 let mongoose = require('mongoose');
-let Schema = mongoose.Schema;
-let GamesSchema = new Schema({
+let gamesSchema = new mongoose.Schema({
   title: String,
   genre: String,
   year: Number,
@@ -11,5 +10,4 @@ let GamesSchema = new Schema({
 
 });
 
-let Game = mongoose.model('Game', GamesSchema);
-module.exports = Game;
+module.exports = mongoose.model('Games', gamesSchema);
