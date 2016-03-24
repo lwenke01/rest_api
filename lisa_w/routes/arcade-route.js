@@ -1,13 +1,14 @@
 'use strict';
-var Arcade = require('../models/Arcade');
-var bodyParser = require('body-parser');
+let Arcade = require('../models/Arcade');
+let express =require('express');
+let bodyParser = require('body-parser');
+let router = express.Router();
 require('./game-route.js');
-require('../models/Game');
+let Game = require('../models/Game');
 
-module.exports = function(router){
-  router.use(bodyParser.json());
+router.use(bodyParser.json());
 
-  router.route('/arcades')
+router.route('/arcades')
    .post((req, res)=>{
      console.log('post was hit');
      var newArcade = new Arcade(req.body);
@@ -25,7 +26,7 @@ module.exports = function(router){
        console.log('hit' + arcades);
      });
    });
-  router.route('/arcades/:id')
+router.route('/arcades/:id')
    .get((req, res)=>{
      console.log(('GET /arcade/:id was hit'));
      Arcade.findById(req.params.id, (err, arcade)=>{
@@ -50,8 +51,20 @@ module.exports = function(router){
       });
     });
 
+router.route('arcades/:id/games')
+.post((req, res)=>{
+  console.log('post to arcade games');
+  var newGame = new Game();
+  newGame.save((err, game)=>{
+    if(err) res.send(err);
+    Arcade.findByIdAndUpdate(req.params.id, {$push: {games: game._id}}, (err, game)=>{
+      
+    })
+  })
+})
 
-  router.route('/arcade-names')
+
+router.route('/arcade-names')
     .get((req, res)=>{
       var nameArray = [];
       Arcade.find({}, (err, arcades)=>{
@@ -63,4 +76,4 @@ module.exports = function(router){
       });
     });
 
-};
+module.exports = router;

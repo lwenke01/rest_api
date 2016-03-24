@@ -14,5 +14,6 @@ require('./routes/game-route')(router);
 
 app.use('/api', router);
 
+
 app.listen(port);
 console.log('Magic is happening on port ' + port);
