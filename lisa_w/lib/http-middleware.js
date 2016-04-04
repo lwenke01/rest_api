@@ -11,10 +11,15 @@ module.exports = function(req, res, next){
     var utf8AuthString = authBuffer.toString();
     var authArr = utf8AuthString.split(':');
     zeroBuf(authBuffer);
-    if (authArr[0].length && authArr[1].length){
+
+    var username = authArr[0];
+    var password = authArr[1];
+
+    if (username.length && password.length){
+      console.log('AUTH 1 ' + username);
       req.basicHttp = {
-        email: authArr[0],
-        password: authArr[1]
+        username: username,
+        password: password
       };
       return next();
     }
@@ -22,5 +27,5 @@ module.exports = function(req, res, next){
   } catch(e) {
     console.log(e);
   }
-  res.status(401).json({msg: 'failed to auth'});
+  res.status(401).json({msg: 'failed to auth Basic HTTP'});
 };

@@ -9,6 +9,7 @@ const dbErrorHandler = require(__dirname + '/../lib/db-error-handler');
 var userRouter = module.exports = exports = express.Router();
 
 userRouter.get('/currentuser', jsonParser, jwtAuth, (req, res)=>{
+  console.log(req.user);
   User.findOne({_id: req.user._id}, (err, user)=>{
     if(err) dbErrorHandler(err, res);
 

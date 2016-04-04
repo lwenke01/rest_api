@@ -15,9 +15,9 @@ authRouter.post('/signup', jsonParser, (req, res)=>{
     return res.status(400).json({msg: 'invalid email and password'});
   }
   newUser.username = req.body.username;
+  newUser.authentication.email = req.body.email;
   newUser.authentication.password = req.body.password;
   debugger;
-  newUser.authentication.email = req.body.email;
   newUser.save((err, data)=>{
     if(err) return dbErrorHandler(err, res);
     res.status(200).json({token: data.generateToken()});

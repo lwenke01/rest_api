@@ -32,5 +32,5 @@ app.use('/api', arcadeRouter);
 // console.log(app.path());
 // app.setTimeout = 0;
 // app.setTimeout = 0;
-app.listen(port);
+app.listen(6000);
 console.log('Magic is happening on port ' + port);
