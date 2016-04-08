@@ -11,9 +11,12 @@
     "body-parser": "^1.15.0"
   },
   "devDependencies": {
+    "bcrypt": "^0.8.5",
     "chai": "^3.5.0",
     "chai-http": "^2.0.1",
-    "mocha": "^2.4.5"
+    "jsonwebtoken": "^5.7.0",
+    "mocha": "^2.4.5",
+    "morgan": "^1.7.0"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",

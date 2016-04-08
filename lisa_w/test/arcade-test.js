@@ -1,6 +1,4 @@
 'use strict';
-process.env.MONGOLAB_URI = 'mongodb://localhost/arcade-test';
-require(__dirname + '/../server');
 var mongoose = require('mongoose');
 var chai = require('chai');
 var chaiHTTP = require('chai-http');
@@ -8,103 +6,142 @@ chai.use(chaiHTTP);
 
 var request = chai.request;
 var expect = chai.expect;
-var Arcade = require(__dirname +'./../models/Arcade');
-var newId;
+// var Arcade = require(__dirname +'./../models/Arcade');
+// var newId;
+process.env.MONGOLAB_URI = 'mongodb://localhost/test';
+require(__dirname + '/../server');
 
 describe('testing Arcade REST api routes', () => {
-  beforeEach((done)=>{
-    var newArcade = new Arcade({
-      name: 'Test Name',
-      address: 'Test Address'
-    });
-    newArcade.save((err)=>{
+  var authToken, arcade_id;
+
+  before((done)=>{
+    request('localhost:6000')
+    .post('/signup')
+    .send({
+      name:'Ginger Gold',
+      password:'Hero89',
+      email:'gingergold@gmail.com'
+    })
+    .end((err, res)=>{
+      if (err) console.log(err);
+      authToken = res.body.token;
       done();
     });
-  });
-  afterEach((done)=>{
+
+  after((done)=>{
     mongoose.connection.db.dropDatabase(function(){
       done();
     });
   });
-  it('POST should post new data to /Arcades', (done)=>{
-    request('localhost:3000')
-    .post('/api/arcades')
-    .send({name: 'test arcade'})
+
+  describe('arcade routes', ()=>{
+    it('should only POST with allowedd access/correct token to /arcades', (done)=>{
+      request('localhost:6000')
+      .post('/arcades')
+      .send({
+        name: 'Ginger Games',
+        address: '908 87th ave e'
+      })
+      .end((err, res)=>{
+        expect(err.status).to.eql(401);
+        expect(res.body.msg).to.eql('cannot authenticate password for account');
+        done();
+      });
+    });
+  it('should create a new arcade via POST in /Arcades', (done)=>{
+    request('localhost:6000')
+    .post('/arcades')
+    .set('token', authToken)
+    .send({
+      name: 'test arcade',
+      address: 'test address'
+    })
     .end((err, res) =>{
+      arcade_id = res.body._id;
       expect(err).to.eql(null);
       expect(res).to.have.status(200);
       expect(res).to.be.json;
-      expect(res.body.data['name']).to.have.eql('test arcade');
+      console.log('POST DATA: ' + res.body.data);
+      expect(res.body.name).to.eql('test arcade');
       expect(res.body.data).to.have.property('_id');
       done();
     });
   });
-  it('GET should receive the /arcades data', (done)=>{
-    request('localhost:3000')
-    .get('/api/arcades')
+  it('should create a 2nd arcade via POST in /Arcades', (done)=>{
+    request('localhost:6000')
+    .post('/arcades')
+    .set('token', authToken)
+    .send({
+      name: 'test arcade1',
+      address: 'test address1'
+    })
+    .end((err, res) =>{
+      arcade_id = res.body._id;
+      expect(err).to.eql(null);
+      expect(res).to.have.status(200);
+      expect(res).to.be.json;
+      console.log('POST DATA: ' + res.body.data);
+      expect(res.body.name).to.eql('test arcade1');
+      expect(res.body.data).to.have.property('_id');
+      done();
+    });
+  });
+  it('GET should receive the /arcades data in an array', (done)=>{
+    request('localhost:6000')
+    .get('/arcades')
+    .set('token', authToken)
     .end((err, res)=> {
       expect(err).to.eql(null);
       expect(res).to.be.status(200);
       expect(res).to.be.json;
       console.log(res.body);
       expect(res.body).to.exist;
-      expect(Array.isArray(res.body)).to.eql(true);
+      expect(Array.isArray(res.body.data)).to.eql(true);
       done();
 
     });
   });
-});
-describe('needs an array to get id', () =>{
-  beforeEach((done)=>{
-    var testArcade = new Arcade({name:'test arcade'});
-    testArcade.save((err, data)=>{
-      newId = data.body;
-      this.testArcade = data;
-      done();
-    });
-  });
-  it('should be able to make a note in a beforeEach block', ()=>{
-    expect(this.testArcade.name).to.eql('test arcade');
-    expect(this.testArcade).to.have.property('_id');
-  });
+
   it('GET should receive the /arcades/:id data', (done)=>{
-    request('localhost:3000')
-    .get('/api/arcades/' + newId)
-    .end(function(err, res) {
+    request('localhost:6000')
+    .get('/arcades/' + arcade_id)
+    .set('token', authToken)
+    .end((err, res)=> {
       expect(err).to.eql(null);
       expect(res).to.be.status(200);
       console.log('NEW ID:' + res.body.newId);
-      expect(res.body).to.exist;
+      expect(res.body.name).to.eql('test arcade');
       done();
     });
   });
 
   it('PUT should receive the /arcades/:id data', (done)=>{
-    request('localhost:3000')
-    .put('/api/arcades/' + newId)
+    request('localhost:6000')
+    .put('/arcades/' + arcade_id)
+    .set('token', authToken)
     .send({name: 'test PUT name'})
-    .end(function(err, res) {
+    .end((err, res)=> {
       expect(err).to.eql(null);
       expect(res).to.be.status(200);
-      console.log('CHECK' + newId);
-      expect(res).to.be.json;
+      expect(res.body.msg).to.eql('update success');
       done();
     });
 
   });
   it('DELETE should remove the arcade by the id', (done)=>{
-    request('localhost:3000')
-        .delete('/api/arcades/'+ newId)
+    request('localhost:6000')
+        .delete('/arcades/'+ arcade_id)
+        .set('token', authToken)
         .end((err, res)=>{
           expect(err).to.eql(null);
           expect(res).to.be.status(200);
-          expect(res).to.be.json;
+          expect(res.body.msg).to.eql('arcade removed');
           done();
         });
   });
   it('should make an array of arcade names for /arcade-names', (done)=>{
-    request('localhost:3000')
-      .get('/api/arcade-names')
+    request('localhost:6000')
+      .get('/arcade-names')
       .end((err, res)=>{
         expect(err).to.eql(null);
         expect(res).to.be.status(200);

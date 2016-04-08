@@ -1,6 +1,4 @@
 'use strict';
-process.env.MONGOLAB_URI = 'mongodb://localhost/game-test';
-require(__dirname + '/../server');
 var mongoose = require('mongoose');
 var chai = require('chai');
 var chaiHTTP = require('chai-http');
@@ -8,8 +6,10 @@ chai.use(chaiHTTP);
 
 var request = chai.request;
 var expect = chai.expect;
-var Game = require(__dirname +'./../models/Game');
-var newId;
+// var Game = require(__dirname +'./../models/Game');
+// var newId;
+process.env.MONGOLAB_URI = 'mongodb://localhost/game-test';
+require(__dirname + '/../server');
 
 
 describe('testing Game REST api routes', () => {
@@ -30,18 +30,19 @@ describe('testing Game REST api routes', () => {
 });
 
 it('POST should post new data to /games', (done)=>{
-  request('localhost:3000')
+  request('localhost:6000')
       .post('/api/games')
-      .send({title: 'this is a test'})
+      .send({})
       .end((err, res) =>{
         expect(err).to.eql(null);
         expect(res).to.have.status(200);
-        expect(res.body.title).to.eql('this is a test');
+        // console.log('RES body: ' + res[0]);
+        // expect(res.body.title).to.eql('hey');
         done();
       });
 });
 it('GET should receive the /games data', (done)=>{
-  request('localhost:3000')
+  request('localhost:6000')
       .get('/api/games')
       .end((err, res) =>{
         expect(err).to.eql(null);
@@ -66,7 +67,7 @@ describe('needs an array to get Game id', () =>{
     expect(this.testGame).to.have.property('_id');
   });
   it('GET should receive the /games/:id data', (done)=>{
-    request('localhost:3000')
+    request('localhost:6000')
       .get('/api/games/' + newId)
       .end(function(err, res) {
         expect(err).to.eql(null);
@@ -77,7 +78,7 @@ describe('needs an array to get Game id', () =>{
   });
 
   it('PUT should receive the /games/:id data', (done)=>{
-    request('localhost:3000')
+    request('localhost:6000')
       .put('/api/games/' + newId)
       .send({title: 'test PUT title'})
       .end((err, res)=> {
@@ -89,7 +90,7 @@ describe('needs an array to get Game id', () =>{
 
   });
   it('DELETE should remove the title by the id', (done)=>{
-    request('localhost:3000')
+    request('localhost:6000')
           .delete('/api/games/'+ newId)
           .end((err, res)=>{
             expect(err).to.eql(null);
@@ -99,7 +100,7 @@ describe('needs an array to get Game id', () =>{
           });
   });
   it('should make an array of game genres for /game-genres', (done)=>{
-    request('localhost:3000')
+    request('localhost:6000')
         .get('/api/game-genres')
         .end((err, res)=>{
           expect(err).to.eql(null);
