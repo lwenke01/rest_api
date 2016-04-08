@@ -55,7 +55,7 @@ describe('testing Arcade REST api routes', () => {
   });
 });
 describe('needs an array to get id', () =>{
-  beforeEach((done)=>{
+  before((done)=>{
     var testArcade = new Arcade({name:'test arcade'});
     testArcade.save((err, data)=>{
       newId = data.body;
