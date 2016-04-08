@@ -6,7 +6,7 @@ const app = express();
 const arcadeRouter = require(__dirname + '/routes/arcade-route');
 const gameRouter = require(__dirname + '/routes/game-route');
 const userRouter = require(__dirname + '/routes/user-routes');
-const authRouter = require(__dirname + '/routes/auth-routes');
+// const authRouter = require(__dirname + '/routes/auth-routes');
 
 var port = process.env.PORT || 6000;
 let DB_PORT = process.env.MONGOLAB_URI || 'mongodb://localhost/rest-auth';
@@ -26,7 +26,7 @@ app.use((req, res, next)=>{
 // let router = express.Router();
 app.use('/api', gameRouter);
 app.use('/api', userRouter);
-app.use('/api', authRouter);
+// app.use('/api', authRouter);
 app.use('/api', arcadeRouter);
 
 // console.log(app.path());

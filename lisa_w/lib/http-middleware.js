@@ -13,6 +13,7 @@ module.exports = function(req, res, next){
     zeroBuf(authBuffer);
 
     var username = authArr[0];
+    console.log(username);
     var password = authArr[1];
 
     if (username.length && password.length){
