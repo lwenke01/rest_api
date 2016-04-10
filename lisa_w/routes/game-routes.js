@@ -10,19 +10,19 @@ var gameRouter = module.exports = exports = express.Router();
 gameRouter.use(jsonParser);
 
 gameRouter.route('/games')
+.get(jwtAuth,(req, res) =>{
+  console.log('get was hit');
+  Game.find({},(err, games)=>{
+    if (err) return dbErrorHandler(err, res);
+    res.json({data: games});
+  });
+})
 .post(jwtAuth, (req, res)=>{
   console.log('post /games was hit');
   var newGame = new Game(req.body);
   newGame.save((err, game)=>{
-    if (err) res.send(err);
+    if (err) return dbErrorHandler(err, res);
     res.json(game);
-  });
-})
-.get(jwtAuth,(req, res) =>{
-  console.log('get was hit');
-  Game.find({},(err, games)=>{
-    if(err) res.send(err);
-    res.json(games);
   });
 });
 
@@ -30,15 +30,15 @@ gameRouter.route('/games/:id')
 .get(jwtAuth,(req, res)=>{
   console.log(('GET /games/:id was hit'));
   Game.findById(req.params.id, (err, game)=>{
-    if (err) res.send(err);
+    if (err) return dbErrorHandler(err, res);
     res.json(game);
   });
 })
 .put(jwtAuth,(req, res)=>{
   console.log('PUT /game/:id was hit');
-  Game.findByIdAndUpdate(req.params.id, req.body,(err, game)=>{
-    if (err) res.send(err);
-    res.json(game);
+  Game.findByIdAndUpdate(req.params.id, req.body,(err)=>{
+    if (err) return dbErrorHandler(err, res);
+    res.json({msg: 'updated game sucessfully'});
   });
 })
 .delete(jwtAuth,(req, res)=>{
@@ -46,9 +46,9 @@ gameRouter.route('/games/:id')
   Game.remove({
     id: req.params.id
   },function(err, game) {
-    if(err) res.send(err);
+    if (err) return dbErrorHandler(err, res);
     res.json({
-      message: 'sucessfully deleted game: ' + game});
+      msg: 'sucessfully deleted game: ' + game});
   });
 });
 gameRouter.route('/game-genres')
@@ -58,7 +58,7 @@ gameRouter.route('/game-genres')
       games.forEach((games)=> {
         genreArray.push(games.genre);
       });
-      if (err) res.send(err);
+      if (err) return dbErrorHandler(err, res);
       res.json({genreArray});
     });
   });

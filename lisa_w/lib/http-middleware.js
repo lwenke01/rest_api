@@ -11,17 +11,12 @@ module.exports = function(req, res, next){
     var utf8AuthString = authBuffer.toString();
     var authArr = utf8AuthString.split(':');
     zeroBuf(authBuffer);
-
-    var username = authArr[0];
-    console.log(username);
-    var password = authArr[1];
-
-    if (username.length && password.length){
-      console.log('AUTH 1 ' + username);
-      req.basicHttp = {
-        username: username,
-        password: password
+    if(authArr[0].length && authArr[1].length){
+      req.basicHTTP = {
+        password: authArr[0],
+        email: authArr[1]
       };
+  
       return next();
     }
 

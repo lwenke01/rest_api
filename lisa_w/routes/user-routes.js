@@ -12,14 +12,14 @@ userRouter.use(jsonParser);
 
 userRouter.route('/users')
 .get(jwtAuth, (req, res)=>{
-  console.log(req.user);
+  console.log(req.user.username);
   User.find({}, (err, user)=>{
     if(err) console.log(err);
     res.json({data: user});
 
   });
 });
-userRouter.route('/users:user')
+userRouter.route('/users/:user')
 .get(jwtAuth, (req, res)=>{
   User.findById(req.params.user, (err, user)=>{
     if(err) return console.log(err);
