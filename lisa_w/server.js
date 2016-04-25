@@ -8,19 +8,19 @@ const models = require(__dirname + '/models');
 const Game = models.Game;
 const Arcade = models.Arcade;
 const User = models.User;
-const port = process.env.PORT || 6000;
+const port = process.env.PORT || 8080;
 const app = module.exports = exports = express();
 
-const DB_PORT = process.env.MONGOLAB_URI || 'mongodb://localhost/db';
+const DB_PORT = process.env.MONGOLAB_URI || 'mongodb://localhost/rest-auth';
 mongoose.connect(DB_PORT);
 
 const router = express.Router();
-require(__dirname + './routes/arcade-routes')(router, models);
-require(__dirname + './routes/game-routes')(router, models);
-require(__dirname + './routes/user-routes')(router, models);
+require(__dirname + '/routes/arcade-routes')(router, models);
+require(__dirname + '/routes/game-routes')(router, models);
+require(__dirname + '/routes/user-routes')(router, models);
 
 const authRouter = express.Router();
-require(__dirname + './routes/auth-routes')(authRouter, models);
+require(__dirname + '/routes/auth-routes')(authRouter, models);
 
 app.use(bodyParser.json());
 

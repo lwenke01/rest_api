@@ -2,8 +2,12 @@
 
 module.exports = (router, models) => {
   const Game = models.Game;
+  const express = require('express');
+  const jsonParser = require('body-parser').json();
+  const dbErrorHandler = require(__dirname + '/../lib/db-error-handler');
+  const jwtAuth = require(__dirname + '/../lib/jwt-auth');
 
-  gameRouter.route('/games')
+  router.route('/games')
   .post((req, res)=>{
     console.log('post /games was hit');
     var newGame = new Game(req.body);
@@ -20,7 +24,7 @@ module.exports = (router, models) => {
     });
   });
 
-  gameRouter.route('/games/:id')
+  router.route('/games/:id')
   .get((req, res)=>{
     console.log(('GET /games/:id was hit'));
     Game.findById(req.params.id, (err, game)=>{
@@ -45,7 +49,7 @@ module.exports = (router, models) => {
         message: 'sucessfully deleted game: ' + game});
       });
     });
-    gameRouter.route('/game-genres')
+    router.route('/game-genres')
     .get((req, res)=>{
       var genreArray = [];
       Game.find({}, (err, games)=>{

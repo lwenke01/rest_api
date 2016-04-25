@@ -1,6 +1,6 @@
 'use strict';
 
-const zeroBuf = require(__dirname + './buffer.js');
+const zeroBuf = require(__dirname + '/buffer.js');
 
 
 module.exports = function(req, res, next){
