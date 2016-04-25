@@ -1,42 +1,31 @@
 'use strict';
-const bcrypt = require('bcrypt');
-const config = require(__dirname + '/../lib/config');
-const jwt = require('jsonwebtoken');
-const mongoose = require('mongoose');
+module.exports = (mongoose, models)=>{
 
-
-var userSchema = new mongoose.Schema({
+let Schema = mongoose.Schema;
+let UserSchema = new mongoose.Schema({
   username: {
-    type: String
-    // unique: true,
-    // required: true
+    type: String,
+    required: [true, 'username is required']
   },
   authentication: {
-    password: {
-      type: String
-      // required: true
-    }
-    // email: {
-    //   type: String
-    //   // unique: true
-    // }
+    email: String,
+    password: String
   }
 });
 
-// userSchema.pre('save', function(next){
-//   this.authentication.password = bcrypt.hashSync(this.password, bcrypt.genSaltSync(8));
-//   next();
-// });
-userSchema.methods.hashPassword = function(password){
-  var hash = this.authentication.password = bcrypt.hashSync(password, bcrypt.genSaltSync(8));
+
+UserSchema.methods.hashPassword = function(password){
+  var hash = this.authentication.password = bcrypt.hashSync(password, 8);
   return hash;
 };
 
-userSchema.methods.comparePassword = function(password){
+UserSchema.methods.comparePassword = function(password){
   return bcrypt.compareSync(password, this.authentication.password);
 };
-userSchema.methods.generateToken = function(){
+UserSchema.methods.generateToken = function(){
   return jwt.sign({id: this._id}, config.secret);
 };
 
-module.exports = exports = mongoose.model('User', userSchema);
+let User = mongoose.model('User', UserSchema);
+models.User = User;
+};

@@ -1,15 +1,17 @@
 'use strict';
 
+module.exports = (router, models)=>{
+const Arcade = models.Arcade;
+
 const express = require('express');
-const Arcade = require(__dirname + '/../models/Arcade');
 const jsonParser = require('body-parser').json();
 const dbErrorHandler = require(__dirname + '/../lib/db-error-handler');
 const jwtAuth = require(__dirname + '/../lib/jwt-auth');
 
-var arcadeRouter = module.exports = exports = express.Router();
 
 
-arcadeRouter.post('/arcades', jwtAuth, jsonParser, (req, res)=>{
+
+router.post('/arcades', jwtAuth, jsonParser, (req, res)=>{
   console.log('post was hit');
   var newArcade = new Arcade(req.body);
   newArcade.userId = req.user._id;
@@ -20,7 +22,7 @@ arcadeRouter.post('/arcades', jwtAuth, jsonParser, (req, res)=>{
   });
 
 });
-arcadeRouter.get('/arcades', (req, res) =>{
+router.get('/arcades', (req, res) =>{
   console.log('get was hit');
   Arcade.find({},(err, arcades)=>{
     if(err)  return dbErrorHandler(err, res);
@@ -30,7 +32,7 @@ arcadeRouter.get('/arcades', (req, res) =>{
   });
 });
 
-arcadeRouter.get('/user-arcades', jwtAuth, (req, res)=>{
+router.get('/user-arcades', jwtAuth, (req, res)=>{
   Arcade.find({userId: req.user._id}, (err, arcade)=>{
     if(err) return dbErrorHandler(err, res);
 
@@ -48,7 +50,7 @@ arcadeRouter.get('/user-arcades', jwtAuth, (req, res)=>{
    //
   //    });
   //  })
-arcadeRouter.put('/arcades/:id',jwtAuth, jsonParser,(req, res)=>{
+router.put('/arcades/:id',jwtAuth, jsonParser,(req, res)=>{
   console.log('PUT /arcade/:id was hit');
   Arcade.findByIdAndUpdate(req.params.id, req.body,(err)=>{
     if (err) return dbErrorHandler(err, res);
@@ -56,7 +58,7 @@ arcadeRouter.put('/arcades/:id',jwtAuth, jsonParser,(req, res)=>{
     res.status(200).json({msg: 'success'});
   });
 });
-arcadeRouter.delete('/arcades/:id',(req, res)=> {
+router.delete('/arcades/:id',(req, res)=> {
   Arcade.remove({_id: req.params.id}, (err)=> {
     if(err) return dbErrorHandler(err, res);
 
@@ -65,7 +67,7 @@ arcadeRouter.delete('/arcades/:id',(req, res)=> {
 });
 
 
-arcadeRouter.get('/arcade-names', (req, res)=>{
+router.get('/arcade-names', (req, res)=>{
   var nameArray = [];
   Arcade.find({}, (err, arcades)=>{
     arcades.forEach((arcade)=> {
@@ -76,4 +78,4 @@ arcadeRouter.get('/arcade-names', (req, res)=>{
   });
 });
 
-// };
+};

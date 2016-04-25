@@ -1,6 +1,6 @@
 'use strict';
 
-const zeroBuf = require(__dirname + '/buffer.js');
+const zeroBuf = require(__dirname + './buffer.js');
 
 
 module.exports = function(req, res, next){
@@ -16,11 +16,11 @@ module.exports = function(req, res, next){
     console.log(username);
     var password = authArr[1];
 
-    if (username.length && password.length){
+    if (authArr[0].length && authArr[1].length){
       console.log('AUTH 1 ' + username);
       req.basicHttp = {
-        username: username,
-        password: password
+        email: authArr[0],
+        password: authArr[1]
       };
       return next();
     }

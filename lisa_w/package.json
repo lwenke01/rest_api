@@ -6,9 +6,10 @@
     "test": "test"
   },
   "dependencies": {
-    "mongoose": "^4.4.7",
+    "bcrypt": "^0.8.6",
+    "body-parser": "^1.15.0",
     "express": "^4.13.4",
-    "body-parser": "^1.15.0"
+    "mongoose": "^4.4.7"
   },
   "devDependencies": {
     "bcrypt": "^0.8.5",
