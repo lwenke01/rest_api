@@ -3,7 +3,7 @@
 const zeroBuf = require(__dirname + '/buffer.js');
 
 
-module.exports = function(req, res, next){
+module.exports = exports =  function(req, res, next){
   try {
     var authString = req.headers.authorization;
     var base64String = authString.split(' ')[1];
@@ -11,11 +11,6 @@ module.exports = function(req, res, next){
     var utf8AuthString = authBuffer.toString();
     var authArr = utf8AuthString.split(':');
     zeroBuf(authBuffer);
-
-    var username = authArr[0];
-    console.log(username);
-    var password = authArr[1];
-
     if (authArr[0].length && authArr[1].length){
       console.log('AUTH 1 ' + username);
       req.basicHttp = {
@@ -28,5 +23,5 @@ module.exports = function(req, res, next){
   } catch(e) {
     console.log(e);
   }
-  res.status(401).json({msg: 'failed to auth Basic HTTP'});
+  res.status(401).json({msg: 'failed to auth'});
 };
