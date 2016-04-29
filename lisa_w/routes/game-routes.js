@@ -22,7 +22,7 @@ gameRouter.post('/games', jsonParser, jwtAuth, (req, res)=>{
   });
 });
 gameRouter.put('/games/:id', jsonParser, jwtAuth, (req, res)=>{
-  // console.log('PUT /game/:id was hit');
+  console.log('PUT /game/:id was hit');
   Game.findByIdAndUpdate(req.params.id, req.body,(err, game)=>{
     if(err) return dbErrorHandler(err, res);
       res.status(200).json(game);

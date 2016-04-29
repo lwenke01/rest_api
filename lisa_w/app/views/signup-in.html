@@ -1,0 +1,9 @@
+<main ng-cloak ng-init="arcadectrl.getArcade()">
+<ul>
+  <li ng-repeat="arcade in arcadectrl.arcades">{{arcade.name}}
+    <button ng-click="arcadectrl.removeArcade(arcade)">Delete</button>
+    <button ng-click="arcadectrl.toggleForm(arcade)">Delete</button>
+
+  </li>
+</ul>
+</main>

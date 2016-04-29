@@ -5,7 +5,8 @@ const mongoose = require('mongoose');
 let Schema = mongoose.Schema;
 let ArcadeSchema = new Schema({
   name: String,
-  address: String,
+  location: String,
+  hours: String,
   updated: {type: Date, default: Date.now },
   games: [{
     type: Schema.Types.ObjectId,

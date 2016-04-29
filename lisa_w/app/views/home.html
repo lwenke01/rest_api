@@ -1,0 +1,19 @@
+<main ng-cloak ng-init="arcadectrl.getArcade()">
+<ul>
+  <li ng-repeat="arcade in arcadectrl.arcades">{{arcade.name}}
+    <button ng-click="arcadectrl.removeArcade(arcade)">Delete</button>
+    <button ng-click="arcadectrl.toggleForm(arcade)">Edit</button>
+    <form ng-if="arcade.editing" ng-submit="arcadectrl.updateArcade(arcade)">
+      <input type="text" ng-model="arcade.name">
+      <button ng-click="arcadectrl.toggleForm(arcade)">Cancel</button>
+      <button type="submit">Update</button>
+    </form>
+  </li>
+</ul>
+<form ng-submit="arcadectrl.createArcade(arcadectrl.newArcade)">
+  <input type="text" placeholder="name" ng-model="arcadectrl.newArcade.name"/>
+  <input type="text" ng-model="arcadectrl.newArcade.name"/>
+  <button type="submit">New Arcade</button>
+
+</form>
+</main>

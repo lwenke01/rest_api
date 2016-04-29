@@ -1,12 +1,11 @@
 'use strict';
 
-const mongoose = require('mongoose');
 const express = require('express');
 const app = module.exports = exports = express();
+const mongoose = require('mongoose');
 
 const PORT = process.env.PORT || 3000;
-
-const DB_PORT = process.env.MONGOLAB_URI || 'mongodb://localhost/db';
+const DB_PORT = process.env.MONGOLAB_URI || 'mongodb://localhost/rest_api';
 mongoose.connect(DB_PORT);
 
 app.use((req, res, next)=>{
