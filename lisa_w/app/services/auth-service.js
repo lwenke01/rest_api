@@ -16,7 +16,7 @@ module.exports = function(app) {
         })
         // })
       },
-      getToken({
+      getToken(){
         return token || $window.localStorage.token;
       },
       signOut(cb){

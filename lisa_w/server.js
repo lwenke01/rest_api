@@ -16,12 +16,12 @@ app.use((req, res, next)=>{
 });
 
 const arcadeRouter = require(__dirname + '/routes/arcade-routes');
-const gameRouter = require(__dirname + '/routes/game-routes');
+// const gameRouter = require(__dirname + '/routes/game-routes');
 const userRouter = require(__dirname + '/routes/user-routes');
 const authRouter = require(__dirname + '/routes/auth-routes')
 
 app.use(arcadeRouter);
-app.use(gameRouter);
+// app.use(gameRouter);
 app.use(userRouter);
 app.use(authRouter);
 

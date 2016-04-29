@@ -1,9 +1,15 @@
-<main ng-cloak ng-init="arcadectrl.getArcade()">
-<ul>
-  <li ng-repeat="arcade in arcadectrl.arcades">{{arcade.name}}
-    <button ng-click="arcadectrl.removeArcade(arcade)">Delete</button>
-    <button ng-click="arcadectrl.toggleForm(arcade)">Delete</button>
-
-  </li>
-</ul>
-</main>
+<section>
+  <h1 ng-if="arcadectrl.error">{{arcadectrl.error}}</h1>
+  <form ng-submit="arcadectrl.signUp(newUser)">
+    <input type="text" placeholder="email" ng-model="newUser.email">
+    <input type="text" placeholder="username" ng-model="newUser.username">
+    <input type="password" placeholder="password" ng-model="newUser.password">
+    <button type="submit">Sign Up</button>
+  </form>
+  <form ng-submit="arcadectrl.signIn(user)">
+    <input type="text" placeholder="email" ng-model="user.email">
+    <input type="text" placeholder="username" ng-model="user.username">
+    <input type="password" placeholder="password" ng-model="user.password">
+    <button type="submit">Sign In</button>
+  </form>
+</section>

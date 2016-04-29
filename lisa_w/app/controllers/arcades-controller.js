@@ -94,8 +94,7 @@ module.exports = (app) => {
       });
     }
   }]);
-    //   });
-    // };
+
 app.config(['$routeProvider', function(router){
   router
   .when('/signup', {
