@@ -1,2 +1,2 @@
 require('express')().use(require('express')
-    .static(__dirname + '/build')).listen(5000, () => console.log('up on 5000'));
+    .static(__dirname + '/build')).listen(8080, () => console.log('up on 8080'));

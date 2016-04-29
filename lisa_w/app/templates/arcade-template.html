@@ -1,0 +1,26 @@
+<div data-ng-init="arcadectrl.getArcades()" data-ng-controller="ArcadeController as arcadectrl" ng-view>
+  <h2>{{dance}}</h2>
+  <form data-ng-submit="arcadectrl.createArcade(newArcade)">
+    Name<input type="text"  data-ng-model="newArcade.name">
+    Address<input type="text" data-ng-model="newArcade.address">
+    Hours<input type="text" data-ng-model="newArcade.hours">
+    <button type="submit">Add New Arcade</button>
+  </form>
+</div>
+----------------------------------------------------------------------------
+<div data-ng-repeat="arcade in arcadectrl.arcades" data-ng-hide="editorOn">
+  <h2 id="repName"><em> Name:</em> {{arcade.name}}</h2>
+  <h2><em>Address:</em>  {{arcade.address}}</h2>
+  <h2><em>Hours:</em> {{arcade.hours}}</h2>
+  <button data-ng-click="arcadectrl.removeArcade(arcade)">Delete Arcade</button>
+
+  <form data-ng-submit="arcadectrl.showEdit(arcade)" >
+    <h3>Update Arcade</h3>
+    Name<input type="text" data-ng-model="arcade.name" placeholder="name" >
+    Address<input type="text" data-ng-model="arcade.address"placeholder="address">
+    Hours<input type="text" data-ng-model="arcade.hours" placeholder="hours">
+    <button type="submit" data-ng-click="arcadectrl.updateArcade(arcade)">Save Arcade</button>
+    <button type="submit" data-ng-click="arcadectrl.cancelUpdate()">Cancel Update</button>
+  </form>
+</div>
+</section>

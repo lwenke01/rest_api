@@ -6,6 +6,50 @@ const app = angular.module('ArcadeApp', ['ngRoute']);
 
 require('./services/auth-service')(app);
 require('./services/error-service')(app);
+require('./directives/app-directives')(app);
+
+app.config(['$routeProvider', function(router){
+  router
+  .when('/signup', {
+    controller: 'AuthController',
+    controllerAs: 'arcadectrl',
+    templateUrl: 'views/signup-in.html'
+  })
+  .when('/', {
+    controller: 'AuthController',
+    controllerAs: 'arcadectrl',
+    templateUrl: 'views/signup-in.html'
+  })
+  .when('/home', {
+    controller:'AuthController',
+    controllerAs: 'arcadectrl',
+    templateUrl: 'views/home.html'
+  });
+}]);
+
+app.controller('AuthController', ['AuthService','$location', 'ErrorService',
+function(AuthService, $location, ErrorService) {
+  const self = this;
+  self.signUp = function(user){
+    AuthService.createUser(user, function(err, res){
+      if (err) return self.error = ErrorService('problem creating user');
+      self.error = ErrorService(null);
+      $location.path('/home');
+    });
+  }
+  self.signOut = function(){
+    AuthService.signOut(()=>{
+      $location.path('/signup');
+    });
+  }
+  self.signIn = function(user){
+    AuthService.signIn(user, (err,res)=>{
+      if (err) return self.error = ErrorService('problem signing in');
+      self.error = ErrorService(null);
+      $location.path('/home');
+    })
+  }
+}]);
 
 app.controller('ArcadeController', ['AuthService','$http','$location', 'ErrorService',
 function(AuthService, $http, $location, ErrorService) {
@@ -25,11 +69,10 @@ function(AuthService, $http, $location, ErrorService) {
         token: AuthService.getToken()
       }
     })
-    .then((result)=>{
+    .then(function (result) {
       self.error = ErrorService(null);
       self.arcades = result.data.arcades;
-      self.cancelEdit = angular.copy(this.arcades);
-    }, function(error){
+    }, (error)=>{
       console.log(error);
       self.error = ErrorService('Please sign in');
       $location.path('/signup');
@@ -38,7 +81,8 @@ function(AuthService, $http, $location, ErrorService) {
   self.createArcade = function(arcade){
     $http.post(arcadeRoute, arcade, {
       headers: {
-        token: AuthService.getToken()
+        token: AuthService.getToken(),
+        'Content-Type': 'application/json'
       }
     })
     .then((res)=>{
@@ -50,7 +94,8 @@ function(AuthService, $http, $location, ErrorService) {
   self.removeArcade = function(arcade) {
     $http.delete(arcadeRoute + '/' + arcade._id, {
       headers: {
-        token: AuthService.getToken()
+        token: AuthService.getToken(),
+        'Content-Type': 'application/json'
       }
     })
     .then((res)=>{
@@ -76,57 +121,66 @@ function(AuthService, $http, $location, ErrorService) {
     }else {
       arcade.name = arcade.backupName;
       arcade.editing = false;
-
-    }
-  }
-  self.signUp = function(user){
-    AuthService.createUser(user, function(err, res){
-      if (err) return self.error = ErrorService('problem creating user');
-      self.error = ErrorService(null);
-      $location.path('/home');
-    });
-  }
-  self.signOut = function(){
-    AuthService.signOut(()=>{
-      $location.path('/signup');
-    });
-  }
-  self.signIn = function(user){
-    AuthService.signIn(user, (err,res)=>{
-      if (err) return self.error = ErrorService('problem signing in');
-      self.error = ErrorService(null);
-      $location.path('/home');
-    });
-  }
-}]);
-
-app.config(['$routeProvider', function(router){
-  router
-  .when('/signup', {
-    controller: 'ArcadeController',
-    controllerAs: 'arcadectrl',
-    templateUrl: 'views/signup-in.html'
-  })
-  .when('/home', {
-    controller:'ArcadeController',
-    controllerAs: 'arcadectrl',
-    templateUrl: 'views/home.html'
-  })
-}]);
-
-app.directive('customNav', function(){
-  return {
-    restrict: 'E',
-    templateUrl: './views/tabs.html',
-    controller: function(){
-      this.tab = 1;
-      this.isSet = function(check){
-        return this.tab === check;
-      };
-      this.setTab = function(active){
-        this.tab = active;
-      };
-    },
-    controllerAs: 'tabCtrl'
+    // });
   };
-});
+}]);
+
+app.controller('GameController', ['$scope','$http', function($scope, $http){
+  console.log('marker 1');
+  const gameRoute = 'http://localhost:3000/games';
+  $scope.dances = 'Add New Game';
+  this.games = ['game'];
+  this.newGame = {};
+  this.editorOn = false;
+
+  this.getGames = function(){
+    $http.get(gameRoute)
+    .then((result)=>{
+      this.games = result.data.games;
+      this.cancelEdit = angular.copy(this.games);
+    }, function(error){
+      console.log(error);
+    });
+  };
+  this.createGame = function(game){
+    $http.post(gameRoute, game)
+    .then((res)=>{
+      console.log(res.data);
+      this.games.push(res.data);
+    });
+  };
+  this.removeGame = function(game) {
+    $http.delete(gameRoute + '/' + game._id)
+    .then((res)=>{
+      this.games = this.games.filter((g)=> g._id !=game._id);
+    });
+  };
+
+  this.showEdit = function(){
+    this.editorOn = true;
+    this.cancelEdit = angular.copy(this.games);
+  };
+
+  this.hideEdit = function(){
+    this.editorOn = false;
+    this.games = this.cancelEdit;
+  };
+
+
+  this.updateGame = function(gameEdit){
+    $http.put(gameRoute + '/' + gameEdit._id, gameEdit)
+    .then((res)=>{
+      this.games = this.games.map((g) =>{
+        if(g._id === gameEdit._id){
+          return gameEdit;
+        } else {
+          return g;
+        }
+      });
+    });
+  };
+  this.cancelUpdate = function(){
+    this.games = this.cancelEdit;
+  };
+}]);
+};

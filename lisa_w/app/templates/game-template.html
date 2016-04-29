@@ -1,0 +1,32 @@
+<section class="game-class">
+    <div data-ng-init="gamectrl.getGames()" data-ng-controller="GameController as gamectrl">
+      <h1>Games</h1>
+      <h2>{{dances}}</h2>
+      <form data-ng-submit="gamectrl.createGame(newGame)">
+        Title<input type="text" data-ng-model="newGame.title">
+        Genre<input type="text" data-ng-model="newGame.genre">
+        Players<input type="text" data-ng-model="newGame.players">
+        Year<input type="text" data-ng-model="newGame.year">
+        <button type="submit">Add New Game</button>
+      </form>
+    </div>
+    ----------------------------------------------------------------------------
+    <div data-ng-repeat="game in gamectrl.games" data-ng-hide="editorOn">
+      <h2><em> Title:</em> {{game.title}}</h2>
+      <h2><em>Genre:</em>  {{game.genre}}</h2>
+      <h2><em>Players:</em> {{game.players}}</h2>
+      <h2><em>Year:</em> {{game.year}}</h2>
+      <button data-ng-click="gamectrl.removeGame(game)">Delete</button>
+      <!-- <button data-ng-click="gamectrl.showEdit(game)">Edit</button> -->
+
+      <form data-ng-submit="gamectrl.showEdit(game)" >
+        <h3>Update Game</h3>
+        Title<input type="text" data-ng-model="game.title" placeholder="title" >
+        Genre<input type="text" data-ng-model="game.genre"placeholder="genre">
+        Players<input type="text" data-ng-model="game.players" placeholder="players">
+        Year<input type="text" data-ng-model="game.year" placeholder="year">
+        <button type="submit" data-ng-click="gamectrl.updateGame(game)">Save Game</button>
+        <button type="submit" data-ng-click="gamectrl.cancelUpdate()">Cancel</button>
+      </form>
+    </div>
+  </section>
