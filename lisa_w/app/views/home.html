@@ -1,4 +1,4 @@
-<main ng-cloak ng-init="arcadectrl.getArcade()">
+<main ng-cloak ng-init="arcadectrl.getArcade()" ng-controller="ArcadeController as arcadectrl">
   <ul>
     <li ng-repeat="arcade in arcadectrl.arcades">{{arcade.name}}
       <button ng-click="arcadectrl.removeArcade(arcade)">Delete</button>

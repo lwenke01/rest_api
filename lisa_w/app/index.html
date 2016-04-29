@@ -9,9 +9,75 @@
   }
     </style>
   </head>
-  <body ng-app="ArcadeApp">
+  <body ng-app="ArcadeApp" ng-contr>
+    <section class="navbar-wrapper">
+      <custom-nav></custom-nav>
+    </section>
+    <main data-ng-init="arcadectrl.getArcades()" data-ng-controller="ArcadeController as arcadectrl" ng-view>
+     <div>
+       <h2>{{dance}}</h2>
+       <form data-ng-submit="arcadectrl.createArcade(newArcade)">
+         Name<input type="text" id="aName" data-ng-model="newArcade.name">
+         Address<input type="text" data-ng-model="newArcade.address">
+         Hours<input type="text" data-ng-model="newArcade.hours">
+         <button type="submit">Add New Arcade</button>
+       </form>
+     </div>
+     ----------------------------------------------------------------------------
+     <div data-ng-repeat="arcade in arcadectrl.arcades" data-ng-hide="editorOn">
+       <h2 id="repName"><em> Name:</em> {{arcade.name}}</h2>
+       <h2><em>Address:</em>  {{arcade.address}}</h2>
+       <h2><em>Hours:</em> {{arcade.hours}}</h2>
+       <button data-ng-click="arcadectrl.removeArcade(arcade)">Delete Arcade</button>
+
+       <form data-ng-submit="arcadectrl.showEdit(arcade)" >
+         <h3>Update Arcade</h3>
+         Name<input type="text" data-ng-model="arcade.name" placeholder="name" >
+         Address<input type="text" data-ng-model="arcade.address"placeholder="address">
+         Hours<input type="text" data-ng-model="arcade.hours" placeholder="hours">
+         <button type="submit" data-ng-click="arcadectrl.updateArcade(arcade)">Save Arcade</button>
+         <button type="submit" data-ng-click="arcadectrl.cancelUpdate()">Cancel Update</button>
+       </form>
+     </div>
+   </section>
+   _________________________________________________________________________
+   <section class="game-class">
+     <h1>Games</h1>
+     <main data-ng-init="gamectrl.getGames()" data-ng-controller="GameController as gamectrl">
+       <div>
+         <h2>{{dances}}</h2>
+         <form data-ng-submit="gamectrl.createGame(newGame)">
+           Title<input type="text" data-ng-model="newGame.title">
+           Genre<input type="text" data-ng-model="newGame.genre">
+           Players<input type="text" data-ng-model="newGame.players">
+           Year<input type="text" data-ng-model="newGame.year">
+           <button type="submit">Add New Game</button>
+         </form>
+       </div>
+       ----------------------------------------------------------------------------
+       <div data-ng-repeat="game in gamectrl.games" data-ng-hide="editorOn">
+         <h2><em> Title:</em> {{game.title}}</h2>
+         <h2><em>Genre:</em>  {{game.genre}}</h2>
+         <h2><em>Players:</em> {{game.players}}</h2>
+         <h2><em>Year:</em> {{game.year}}</h2>
+         <button data-ng-click="gamectrl.removeGame(game)">Delete</button>
+         <!-- <button data-ng-click="gamectrl.showEdit(game)">Edit</button> -->
+
+         <form data-ng-submit="gamectrl.showEdit(game)" >
+           <h3>Update Game</h3>
+           Title<input type="text" data-ng-model="game.title" placeholder="title" >
+           Genre<input type="text" data-ng-model="game.genre"placeholder="genre">
+           Players<input type="text" data-ng-model="game.players" placeholder="players">
+           Year<input type="text" data-ng-model="game.year" placeholder="year">
+           <button type="submit" data-ng-click="gamectrl.updateGame(game)">Save Game</button>
+           <button type="submit" data-ng-click="gamectrl.cancelUpdate()">Cancel</button>
+         </form>
+       </div>
+     </section>
+
+   </main>
 <main ng-view>
-  PROCESSING
+
 
 </main>
 <scriptsrc="./bundle.js"></script>

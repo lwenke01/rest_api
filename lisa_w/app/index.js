@@ -113,3 +113,20 @@ app.config(['$routeProvider', function(router){
     templateUrl: 'views/home.html'
   })
 }]);
+
+app.directive('customNav', function(){
+  return {
+    restrict: 'E',
+    templateUrl: './views/tabs.html',
+    controller: function(){
+      this.tab = 1;
+      this.isSet = function(check){
+        return this.tab === check;
+      };
+      this.setTab = function(active){
+        this.tab = active;
+      };
+    },
+    controllerAs: 'tabCtrl'
+  };
+});
